@@ -1,12 +1,15 @@
 import { Card, Tab, Tabs } from "@blueprintjs/core";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { UserContext } from "./context/UserContext";
 import Login from "./Login";
 import Register from "./Register";
+import Welcome from "./Welcome";
 
 function App() {
   const [currentTab, setCurrentTab] = useState("login");
+  const [userContext, setUserContext] = useContext(UserContext);
 
-  return (
+  return !userContext.token ? (
     <Card elevation="1">
       <Tabs id="Tabs" onChange={setCurrentTab} selectedTabId={currentTab}>
         <Tab id="login" title="Login" panel={<Login />} />
@@ -14,6 +17,8 @@ function App() {
         <Tabs.Expander />
       </Tabs>
     </Card>
+  ) : (
+    <Welcome />
   );
 }
 
