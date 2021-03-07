@@ -45,9 +45,24 @@ const Welcome = () => {
 
   const refetchHandler = () => {
     // set details to undefined so that spinner will be displayed and
-    //  fetchUserDetails will be invoked from useEffect
+    // fetchUserDetails will be invoked from useEffect
     setUserContext((oldValues) => {
       return { ...oldValues, details: undefined };
+    });
+  };
+
+  const logoutHandler = () => {
+    fetch(process.env.REACT_APP_API_ENDPOINT + "users/logout", {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userContext.token}`,
+      },
+    }).then(async (response) => {
+      setUserContext((oldValues) => {
+        return { ...oldValues, details: undefined, token: null };
+      });
+      window.localStorage.setItem("logout", Date.now());
     });
   };
 
@@ -74,6 +89,12 @@ const Welcome = () => {
         </div>
         <div className="user-actions">
           <Button text="Refetch" intent="primary" onClick={refetchHandler} />
+          <Button
+            text="Logout"
+            onClick={logoutHandler}
+            minimal
+            intent="primary"
+          />
         </div>
       </div>
     </Card>
